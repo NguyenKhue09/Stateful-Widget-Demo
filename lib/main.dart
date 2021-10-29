@@ -23,39 +23,83 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
-  final int counter = 0;
+  final int age = 0;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late int _counter;
+  late int _age;
+  bool isSubmit = false;
   final _formKey = GlobalKey<FormState>();
   final _passwordFocus = FocusNode();
   final _btnLoginFocus = FocusNode();
+  final userNameCtrl = TextEditingController();
+  final passwordCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _counter = widget.counter;
+    _age = widget.age;
   }
 
   void _submitForm() async {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) return;
     _formKey.currentState!.save();
+    await _showMyDialog();
   }
 
-  void _incrementCounter() {
+  void _incrementAge() {
     setState(() {
-      _counter += 1;
+      if(_age < 150) {
+        _age += 1;
+      }
     });
+  }
+
+  void _decrementAge() {
+    setState(() {
+      if(_age > 0) {
+        _age -= 1;
+      }
+    });
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Register successful'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text("Username: ${userNameCtrl.text}"),
+                Text("Password: ${passwordCtrl.text}"),
+                Text("Age: $_age"),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK', style: TextStyle(color: Colors.black),),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: const Color(0xFFF5F5F5),
         appBar: AppBar(
           title: const Text("Stateful Widget Demo"),
           centerTitle: true,
@@ -82,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.only(
                     left: 16.0, top: 64.0, right: 16.0, bottom: 8.0),
                 child: TextFormField(
-                  initialValue: "",
+                  controller: userNameCtrl,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 15,
@@ -110,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         .requestFocus(_passwordFocus); // next TextField
                   },
                   validator: (value) {
-                    if (value!.isEmpty) return 'Vui lòng điền tên.';
+                    if (value!.isEmpty) return 'Please type your user name';
                     return null; // Correct input
                   },
                   onSaved: (value) {},
@@ -120,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.only(
                     left: 16.0, top: 32.0, right: 16.0, bottom: 32.0),
                 child: TextFormField(
-                  initialValue: "",
+                  controller: passwordCtrl,
                   obscureText: true,
                   focusNode: _passwordFocus,
                   style: const TextStyle(
@@ -150,10 +194,61 @@ class _MyHomePageState extends State<MyHomePage> {
                         .requestFocus(_btnLoginFocus); // next TextField
                   },
                   validator: (value) {
-                    if (value!.isEmpty) return 'Vui lòng nhập mật khẩu';
+                    if (value!.isEmpty) return 'Please type your password';
                     return null; // Correct input
                   },
                   onSaved: (value) {},
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0, bottom: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                        "Age: ",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Container(
+                        height: 50,
+                        width: 100,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF67D4E0), Color(0xFFE137EE)],
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            GestureDetector(
+                                onTap: () {_decrementAge();},
+                                child: const Icon(Icons.remove, color: Colors.white)
+                            ),
+                            Text(
+                                "$_age",
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                                ),
+                            ),
+                            GestureDetector(
+                                onTap: () {_incrementAge();},
+                                child: const Icon(Icons.add, color: Colors.white)
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
               Padding(
@@ -203,15 +298,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class IProfile {
-  final String username;
-  final String password;
-  final int age;
 
-
-  IProfile({
-    required this.username,
-    required this.password,
-    required this.age
-  });
-}
