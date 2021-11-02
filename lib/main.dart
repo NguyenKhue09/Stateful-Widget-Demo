@@ -42,6 +42,19 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _age = widget.age;
+    print("Khởi tạo state");
+  }
+
+  @override
+  void didUpdateWidget(covariant MyHomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("StatefulWidget bị loại bỏ");
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print("Đối tượng State bị loại bỏ");
   }
 
   void _submitForm() async {
@@ -96,8 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
+
+    print("Build lại UI");
+
     return Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         appBar: AppBar(
@@ -269,6 +286,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   onPressed: () {
                     _submitForm();
+                    //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
                   },
                   child: Ink(
                     decoration: const BoxDecoration(
