@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stateful_widget_demo/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,22 +17,24 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: const RegisterForm(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-  final int age = 0;
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({Key? key}) : super(key: key);
+  final int age = 19;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _RegisterFormState extends State<RegisterForm> {
   late int _age;
-  bool isSubmit = false;
+
+  //bool isSubmit = false;
+
   final _formKey = GlobalKey<FormState>();
   final _passwordFocus = FocusNode();
   final _btnLoginFocus = FocusNode();
@@ -46,10 +49,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  void didUpdateWidget(covariant MyHomePage oldWidget) {
+  void didUpdateWidget(covariant RegisterForm oldWidget) {
     super.didUpdateWidget(oldWidget);
     print("StatefulWidget bị loại bỏ");
   }
+
 
   @override
   void dispose() {
